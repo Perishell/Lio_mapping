@@ -1,0 +1,68 @@
+common:
+    lid_topic:  "/points_raw"
+    imu_topic:  "/imu_raw"
+    wheel_topic: "/twist_feedback"
+    time_sync_en: false         # ONLY turn on when external time synchronization is really not possible
+    # Frames
+    lidarFrame: "lidar_link"                     # 
+    baselinkFrame: "base_link"                  # 
+    odometryFrame: "map"                       # 
+    mapFrame: "map"
+
+preprocess:
+    lidar_type: 8                # 1 for Livox serials LiDAR, 2 for Velodyne LiDAR, 3 for ouster LiDAR, 4 for ls 16,  5 for RSHelios32 7 for mid360 8 for tanway48
+    scan_line: 32
+    scan_rate: 10                # only need to be set for velodyne, unit: Hz,
+    timestamp_unit: 2            # the unit of time/t field in the PointCloud2 rostopic: 0-second, 1-milisecond, 2-microsecond, 3-nanosecond.
+    blind: 0.5                   # 盲区
+    blind_far: 100
+    lidar_rot: [0,0,0]           # lidar rotation rpy
+    cut_frame_num: 0             # must be positive integer
+    
+
+mapping:
+    acc_cov: 0.1 #0.5 #0.1
+    gyr_cov: 0.1 #0.5 #0.1
+    b_acc_cov: 0.0001 #0.0001
+    b_gyr_cov: 0.0001 #0.0001
+    fov_degree:    180
+    det_range:     60.0
+    extrinsic_est_en:  false      # true: enable the online estimation of IMU-LiDAR extrinsic,
+    extrinsic_T: [-0.28, 0,0, 0,0] #[ -0.55, 0.072, 0.0]
+    extrinsic_R: [ 1, 0, 0, 
+                   0, 1, 0, 
+                   0, 0, 1]
+
+publish:
+    path_en:  true
+    scan_publish_en:  true       # false: close all the point cloud output
+    dense_publish_en: true       # false: low down the points number in a global-frame point clouds scan.
+    scan_bodyframe_pub_en: true  # true: output the point cloud scans in IMU-body-frame
+
+pcd_save:
+    pcd_save_en: false
+    interval: -1                 # how many LiDAR frames saved in each pcd file; 
+                                 # -1 : all frames will be saved in ONE pcd file, may lead to memory crash when having too much frames.
+imu:
+  # imu rpy weight
+  imuRPYEnable: false
+  imuRPYWeight: [0.1, 0.5, 0] 
+  angleDiff: 0.017
+
+wheel:
+  use_wheel_vel: false
+  wheel_cov: 0.01
+  nhc_y_cov: 0.01
+  nhc_z_cov: 0.01
+  extrinsic_T: [ 0.0, 0.0, 0.0]
+  extrinsic_R: [1, 0, 0,
+                  0,  1, 0,
+                  0,  0,  1]
+
+feature_extract_enable: 0
+point_filter_num: 2 # 对当前点云的filter
+max_iteration: 3 #最大迭代次数
+filter_size_surf: 0.3 #对当前点云的filter
+filter_size_map: 0.3 #对地图的filter
+cube_side_length: 1000
+runtime_pos_log_enable: 0

@@ -1,0 +1,128 @@
+common:
+    lid_topic:  "/livox/lidar"
+    imu_topic:  "/livox/imu"
+    wheel_topic: "/twist_feedback"
+    time_sync_en: false         # ONLY turn on when external time synchronization is really not possible
+    # Frames
+    lidarFrame: "livox_frame" #"base_link"                     # 
+    baselinkFrame: "base_link"                  # 
+    odometryFrame: "map"                       # 
+    mapFrame: "map"
+
+preprocess:
+    lidar_type: 7                # 1 for Livox serials LiDAR, 2 for Velodyne LiDAR, 3 for ouster LiDAR, 4 for ls 16,  5 for RSHelios32
+    scan_line: 4
+    scan_rate: 10                # only need to be set for velodyne, unit: Hz,
+    timestamp_unit: 3            # the unit of time/t field in the PointCloud2 rostopic: 0-second, 1-milisecond, 2-microsecond, 3-nanosecond.
+    blind: 0.3                   # 盲区
+    blind_far: 70
+    lidar_rot: [0,0,0]           # lidar rotation rpy
+    cut_frame_num: 0             # must be positive integer
+    
+
+mapping:
+    acc_cov: 0.5 #0.1
+    gyr_cov: 0.5 #0.1
+    b_acc_cov: 0.5 #0.0001
+    b_gyr_cov: 0.5 #0.0001
+    fov_degree:    360
+    det_range:     100.0
+    extrinsic_est_en:  false      # true: enable the online estimation of IMU-LiDAR extrinsic,
+    extrinsic_T: [-0.011, -0.02329, 0.04412]
+    extrinsic_R: [ 1, 0, 0, 
+                   0, 1, 0, 
+                   0, 0, 1]
+
+publish:
+    path_en:  true
+    scan_publish_en:  true       # false: close all the point cloud output
+    dense_publish_en: true       # false: low down the points number in a global-frame point clouds scan.
+    scan_bodyframe_pub_en: true  # true: output the point cloud scans in IMU-body-frame
+
+pcd_save:
+    pcd_save_en: false
+    interval: -1                 # how many LiDAR frames saved in each pcd file; 
+                                 # -1 : all frames will be saved in ONE pcd file, may lead to memory crash when having too much frames.
+imu:
+  # imu rpy weight
+  imuRPYEnable: false
+  imuRPYWeight: [0.1, 0.1, 0] 
+  angleDiff: 0.087
+
+wheel:
+  use_wheel_vel: false
+  wheel_cov: 0.01
+  nhc_y_cov: 0.01
+  nhc_z_cov: 0.01
+  extrinsic_T: [ 0.0, 0.0, 0.0]
+  extrinsic_R: [1, 0, 0,
+                  0,  1, 0,
+                  0,  0,  1]
+
+feature_extract_enable: 0
+point_filter_num: 3 # 对当前点云的filter
+max_iteration: 3 #最大迭代次数
+filter_size_surf: 0.5 #对当前点云的filter
+filter_size_map: 0.5 #对地图的filter
+cube_side_length: 500
+runtime_pos_log_enable: 0
+
+octomap:
+  blindSpot: 2.5
+  octomap_resolution: 1
+  octomap_size_x: 20.0
+  octomap_size_y: 20.0
+  octomap_size_z: 10.0   
+
+Grid:
+  save_to_file: true
+  file_path: "/home/nvidia/learn_communication"
+
+Filter:
+  # // 统计滤波参数调节建议：
+  # // ​​MeanK（邻域点数）​​
+  # // ​​场景依赖​​：室内场景建议20-50，室外稀疏点云可增至50-100
+  # // ​​过小​​（<20）：可能误判密集区域的正常点为噪声
+  # // ​​过大​​（>100）：计算量激增，适合高密度激光雷达数据（如128线雷达）
+  # // ​​调试技巧​​：通过可视化观察噪声分布，选择覆盖典型噪声区域的最小邻域
+  # // ​​StddevMulThresh（标准差乘数）​​
+  # // ​​典型范围​​：1.0-3.0（当前0.5偏严格，可能过度删除有效点）
+  # // ​​计算公式​​：阈值 = 平均距离 + 标准差 × 乘数
+  # // ​​动态调整​​：建议从2.0开始，逐步降低至1.0直到噪声点消失
+  # // ​​特殊场景​​：针对传感器噪声特性（如TOF相机脉冲噪声）可设为3.0+
+
+  MeanK: 50
+  StddevMulThresh: 1.0
+  # // 半径滤波参数调节建议：
+  # // ​​RadiusSearch（搜索半径）​​
+  # // ​​尺度匹配​​：室内场景0.3-1.0m，城市道路2-5m，森林环境3-8m
+  # // ​​传感器关联​​：16线雷达建议1.5-3m，固态激光雷达可缩小至0.5-1m
+  # // ​​动态调整​​：取点云平均间距的3-5倍（可通过KDTree计算局部密度）
+  # // ​​MinNeighbors（最小邻居数）​​
+  # // ​​密度基准​​：典型值=半径内预期点数×安全系数（建议0.7-0.9）
+  # // ​​场景示例​​：
+  # // 城市道路：5-10（当前参数偏小）
+  # // 室内场景：3-5
+  # // 植被区域：8-15
+  # // ​​特殊处理​​：对移动物体区域可适当放宽，避免滤除动态目标
+
+  RadiusSearch: 2
+  MinNeighbors: 10
+
+  # // ​​LeafSize（体素尺寸）​​
+  # // ​​分辨率平衡​​：
+  # // 高精度需求（SLAM建图）：0.1-0.3m
+  # // 实时处理（自动驾驶）：0.3-0.5m
+  # // 大规模场景可视化：0.5-2.0m
+  # // ​​各向异性调节​​：
+  # // 地面车辆：可设Z轴0.1m保持高程细节
+  # // 无人机：XYZ均匀设置
+  # // ​​传感器适配​​：
+  # // 机械式雷达：建议0.2-0.4m
+  # // 固态激光雷达：0.1-0.2m
+  # // ​​降采样策略​​：
+  # // ​​分层处理​​：先粗采样（0.5m）去噪，后细采样（0.2m）保特征
+  # // ​​动态调整​​：根据处理阶段调整（前端匹配用细采样，后端优化用粗采样）
+  # // 体素滤波（降采样）
+
+  LeafSize: 0.2

@@ -1,0 +1,3 @@
+<launch>
+    <node pkg="fusion_slam" type="runMapping" name="fusion_slam" output="screen" /> 
+</launch>

@@ -1,0 +1,14 @@
+orb:
+  # visual loop
+  visual_loop_enable: false
+  Vocabulary_path: "/home/haige/Desktop/test_ws/src/fusion_slam/Vocabulary/ORBvoc.txt"
+  # orb Parameters
+  ORBextractor_nFeatures: 2000  # ORB Extractor: Number of features per image
+  ORBextractor_scaleFactor: 1.2 # ORB Extractor Scale factor between levels in the scale pyramid
+  ORBextractor_nLevels: 8       # ORB Extractor: Number of levels in the scale pyramid
+  # ORB Extractor: Fast threshold
+  # Image is divided in a grid. At each cell FAST are extracted imposing a minimum response.
+  # Firstly we impose iniThFAST. If no corners are detected we impose a lower value minThFAST
+  # You can lower these values if your images have low contrast
+  ORBextractor_iniThFAST: 20    
+  ORBextractor_minThFAST: 7

@@ -1,0 +1,15 @@
+<launch>
+  <!-- Launch file for velodyne16 VLP-16 LiDAR -->
+
+    <arg name="rviz" default="true" />
+
+    <rosparam command="load" file="$(find fusion_slam)/config/ls16.yaml" />
+    <rosparam command="load" file="$(find fusion_slam)/config/optimization.yaml" />
+
+    <node pkg="fusion_slam" type="runMapping" name="runMapping" output="screen" /> 
+
+    <group if="$(arg rviz)">
+    <node launch-prefix="nice" pkg="rviz" type="rviz" name="rviz" args="-d $(find fusion_slam)/rviz_cfg/loam_livox.rviz" />
+    </group>
+
+</launch>

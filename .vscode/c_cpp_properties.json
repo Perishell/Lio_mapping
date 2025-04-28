@@ -1,0 +1,24 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/nvidia/uav_ws/devel/include/**",
+        "/home/nvidia/ws_livox/devel/include/**",
+        "/opt/ros/noetic/include/**",
+        "/home/nvidia/uav_ws/src/fusion_slam/include/**",
+        "/home/nvidia/uav_ws/src/slog/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-arm64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}
