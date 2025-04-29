@@ -1,0 +1,10 @@
+<launch>
+	<param name="/fitness_score_threshold" value="0.4"/>
+	<param name="/max_Correspondence_Distance" value="0.1"/>
+
+	<rosparam command="load" file="$(find fusion_slam)/config/mid360.yaml" />
+	<!-- 维护局部地图，并转成3d grid -->
+	<node pkg="fusion_slam" type="localMappingtest" name="localMappingtest" output="screen" />
+    
+	<node pkg="rviz" type="rviz" name="rviz" args="-d $(find fusion_slam)/rviz_cfg/local_mapping.rviz" />
+</launch>

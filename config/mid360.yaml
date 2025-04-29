@@ -125,4 +125,8 @@ Filter:
   # // ​​动态调整​​：根据处理阶段调整（前端匹配用细采样，后端优化用粗采样）
   # // 体素滤波（降采样）
 
-  LeafSize: 0.2
+  LeafSize: 0.25
+
+
+HISTORY_SIZE:
+  MAX_HISTORY_SIZE: 10

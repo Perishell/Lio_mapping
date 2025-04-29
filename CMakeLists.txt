@@ -161,3 +161,11 @@ target_link_libraries(localMapping
         ${GeographicLib_LIBRARIES}
         Backward::Interface
         )
+
+add_executable(localMappingtest src/localMappingtest.cpp)
+add_backward(localMappingtest)
+target_link_libraries(localMappingtest
+    ${PROJECT_NAME}          # 链接当前项目的主库（如果有）
+    ${GeographicLib_LIBRARIES}  # 例如地理库依赖
+    Backward::Interface  # 如使用backward-cpp堆栈跟踪
+)
