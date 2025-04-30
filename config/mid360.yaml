@@ -70,8 +70,8 @@ runtime_pos_log_enable: 0
 octomap:
   blindSpot: 2.5
   octomap_resolution: 1
-  octomap_size_x: 20.0
-  octomap_size_y: 20.0
+  octomap_size_x: 40.0
+  octomap_size_y: 40.0
   octomap_size_z: 10.0   
 
 Grid:
